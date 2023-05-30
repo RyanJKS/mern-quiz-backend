@@ -13,9 +13,9 @@ router.get("/getquiz", async (req, res) => {
 
   try {
     const response = await axios.request(options);
-    res.json({ status: "success", data: response.data });
+    res.status(200).json(response.data);
   } catch (err) {
-    res.json({ status: "fail", data: err.message });
+    res.status(500).json(err.message);
   }
 });
 

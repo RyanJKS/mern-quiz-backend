@@ -38,10 +38,7 @@ router.delete("/delete/:id", verify, async (req, res) => {
         //find and delete all user stats
         await UserStats.deleteMany({ username: user.username });
         await Users.findByIdAndDelete(req.params.id);
-        res.json({
-          status: "success",
-          data: "Account & Contents Deleted Successfully",
-        });
+        res.status(200).json("Account & Contents Deleted Successfully");
       } catch (err) {
         res.json({ status: "fail", data: err.message });
       }

@@ -2,16 +2,25 @@ const mongoose = require("mongoose");
 
 const UserStatsSchema = new mongoose.Schema(
   {
+    userID: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     username: {
       type: String,
       unique: true,
       required: true,
     },
-    wins: {
+    totalPoints: {
       type: Number,
       required: true,
     },
     totalGamesPlayed: {
+      type: Number,
+      required: true,
+    },
+    winPercentage: {
       type: Number,
       required: true,
     },
