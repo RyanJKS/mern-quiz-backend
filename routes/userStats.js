@@ -15,24 +15,26 @@ router.post("/register", async (req, res) => {
 
 //UPDATE STATS
 router.put("/update/:id", verify, async (req, res) => {
-  const filter = { userID: req.params.id };
+  if (req.user.userId === req.params.id) {
+    const filter = { userID: req.params.id };
 
-  try {
-    const updatedStats = await UserStats.findOneAndUpdate(
-      filter,
-      { $set: req.body },
-      { new: true }
-    );
-    res.json({ status: "success", data: updatedStats });
-  } catch (err) {
-    res.json({ status: "fail", data: err.message });
+    try {
+      const updatedStats = await UserStats.findOneAndUpdate(
+        filter,
+        { $set: req.body },
+        { new: true }
+      );
+      res.json({ status: "success", data: updatedStats });
+    } catch (err) {
+      res.json({ status: "fail", data: err.message });
+    }
   }
 });
 
 //GET SPEICIFC USER STATS
-router.get("/specific/:id", async (req, res) => {
+router.get("/current", verify, async (req, res) => {
   try {
-    const userStats = await UserStats.find({ userID: req.params.id });
+    const userStats = await UserStats.find({ userID: req.user.userId });
     res.status(200).json(userStats);
   } catch (err) {
     res.status(400).json(err.message);
