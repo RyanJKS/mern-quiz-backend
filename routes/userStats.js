@@ -15,24 +15,34 @@ router.post("/register", async (req, res) => {
 
 //UPDATE STATS
 router.put("/update/:id", verify, async (req, res) => {
+  //double authentication 1 from id and 2 jwt token unpacked from verify function
   if (req.user.userId === req.params.id) {
-    const filter = { userID: req.params.id };
+    const query = { userID: req.params.id };
+    const update = {
+      $set: {
+        totalPoints: req.body.totalPoints,
+        totalGamesPlayed: req.body.totalGamesPlayed,
+        winPercentage: req.body.winPercentage,
+      },
+      $push: {
+        timePerGame: req.body.timePerGame,
+      },
+    };
 
     try {
-      const updatedStats = await UserStats.findOneAndUpdate(
-        filter,
-        { $set: req.body },
-        { new: true }
-      );
-      res.json({ status: "success", data: updatedStats });
+      const updatedStats = await UserStats.findOneAndUpdate(query, update, {
+        new: true,
+      });
+      res.status(200).json(updatedStats);
     } catch (err) {
-      res.json({ status: "fail", data: err.message });
+      res.status(400).json(err.message);
     }
   }
 });
 
 //GET SPEICIFC USER STATS
 router.get("/current", verify, async (req, res) => {
+  // destructure req.user from verify function (unpack from jwt token)
   try {
     const userStats = await UserStats.find({ userID: req.user.userId });
     res.status(200).json(userStats);

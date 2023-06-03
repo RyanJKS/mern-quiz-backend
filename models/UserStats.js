@@ -24,6 +24,10 @@ const UserStatsSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    timePerGame: {
+      type: Array,
+      required: true,
+    },
   },
   { timestamps: true }
 );
